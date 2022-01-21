@@ -5,6 +5,8 @@ require 'dotenv'
 Dotenv.load('../token.env')
 
 BOT_TOKEN = ENV['TELEGRAM_TOKEN']
-data = ApiData.get
+API_KEY = ENV['API_KEY']
+data = ApiData.get(API_KEY)
 formatted_data = DataFormatter.parse(data)
-Bot.run(BOT_TOKEN)
+tg_bot = Bot.new(formatted_data, BOT_TOKEN)
+tg_bot.run

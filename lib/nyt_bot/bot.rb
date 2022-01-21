@@ -1,8 +1,14 @@
 require 'telegram/bot'
 
 class Bot
+  attr_reader :data, :token
 
-  def self.run(token)
+  def initialize(data, token)
+    @data = data
+    @token = token
+  end
+
+  def run
     Telegram::Bot::Client.run(token) do |bot|
       bot.listen do |message|
         case message.text
@@ -11,6 +17,10 @@ class Bot
             chat_id: message.chat.id,
             text: "hey, #{message.from.first_name}! welcome"
             )
+        when '/data'
+          bot.api.send_message(
+            chat_id: message.chat.id,
+            text: data[0][:title])  
         end
       end
     end
