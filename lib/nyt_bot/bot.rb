@@ -20,7 +20,7 @@ class Bot
         when '/data'
           bot.api.send_message(
             chat_id: message.chat.id,
-            text: data[0][:title])  
+            text: "#{data.pretty_print.join}")  
         end
       end
     end
