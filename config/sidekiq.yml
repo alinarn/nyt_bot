@@ -1,0 +1,4 @@
+:schedule:
+  api_call:
+    every: '2h'
+    class: ApiWorker

@@ -1,11 +1,13 @@
 require 'telegram/bot'
+require 'dotenv'
+Dotenv.load('../../token.env')
 
 class Bot
   attr_reader :data, :token
 
-  def initialize(data, token)
+  def initialize(data)
     @data = data
-    @token = token
+    @token = ENV['TELEGRAM_TOKEN']
   end
 
   def run
