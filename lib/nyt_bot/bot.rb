@@ -1,17 +1,20 @@
 require 'telegram/bot'
+require 'redis'
 require 'dotenv'
 Dotenv.load('../../token.env')
 
 class Bot
-  attr_reader :data, :token
+  attr_reader :data
 
   def initialize(data)
     @data = data
-    @token = ENV['TELEGRAM_TOKEN']
   end
 
+  TOKEN = ENV['TELEGRAM_TOKEN']
+  BOT = Telegram::Bot::Client.new(TOKEN)
+
   def run
-    Telegram::Bot::Client.run(token) do |bot|
+    BOT.run do |bot|
       bot.listen do |message|
         case message.text
         when '/start'
@@ -22,9 +25,22 @@ class Bot
         when '/data'
           bot.api.send_message(
             chat_id: message.chat.id,
-            text: "#{data.pretty_print.join}")  
+            text: "#{data.pretty_print.join}",
+            )
         end
+        store_chat_id(message.chat.id)
       end
     end
+  end
+
+  def self.send_notification
+    chat_id = Redis.current.get('chat_id')
+    BOT.api.send_message(chat_id: chat_id, text: "notification")
+  end
+
+  private
+
+  def store_chat_id(chat_id)
+   Redis.current.set('chat_id', chat_id)
   end
 end
