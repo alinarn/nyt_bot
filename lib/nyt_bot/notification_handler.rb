@@ -6,6 +6,7 @@ class NotificationHandler
   include Sidekiq::Worker
   
   def perform
-    Bot.send_notification
+    data = Redis.current.get('data')
+    Bot.send_notification(data)
   end
 end

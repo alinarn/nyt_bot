@@ -8,6 +8,7 @@ class Bot
 
   def initialize(data)
     @data = data
+    Redis.current.set('data', @data.pretty_print.first)
   end
 
   TOKEN = ENV['TELEGRAM_TOKEN']
@@ -33,9 +34,9 @@ class Bot
     end
   end
 
-  def self.send_notification
+  def self.send_notification(message)
     chat_id = Redis.current.get('chat_id')
-    BOT.api.send_message(chat_id: chat_id, text: "notification")
+    BOT.api.send_message(chat_id: chat_id, text: message)
   end
 
   private
