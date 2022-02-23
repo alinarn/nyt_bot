@@ -1,5 +1,5 @@
 require 'telegram/bot'
-require 'redis'
+require_relative 'services/redis_saver'
 require 'dotenv'
 Dotenv.load('../../token.env')
 
@@ -8,7 +8,7 @@ class Bot
 
   def initialize(data)
     @data = data
-    Redis.current.set('data', @data.pretty_print.first)
+    RedisSaver.call('data', @data.pretty_print.first)
   end
 
   TOKEN = ENV['TELEGRAM_TOKEN']
@@ -42,6 +42,6 @@ class Bot
   private
 
   def store_chat_id(chat_id)
-   Redis.current.set('chat_id', chat_id)
+   RedisSaver.call('chat_id', chat_id)
   end
 end

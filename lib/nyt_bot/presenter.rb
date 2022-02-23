@@ -12,7 +12,8 @@ class DataPresenter
       <<~MESSAGE
         #{review[:title]} #{critics_pick?(review[:critics_pick])}
         #{review[:summary]}
-        review published on: #{format_date(review[:publication_date])}\n 
+        review published on: #{format_date(review[:publication_date])}
+        view here: #{review[:link]}\n 
       MESSAGE
     end
   end

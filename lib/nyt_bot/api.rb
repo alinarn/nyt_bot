@@ -1,5 +1,5 @@
 require 'net/http'
-require 'redis'
+require_relative 'services/redis_saver'
 require 'dotenv'
 Dotenv.load('../../token.env')
 
@@ -22,11 +22,7 @@ class ApiData
       http = Net::HTTP.new("api.nytimes.com")
       request = Net::HTTP::Get.new("/svc/movies/v2/reviews/search.json?reviewer=Ben%20Kenigsberg&api-key=#{API_KEY}")
       response = http.request(request)
-      store_in_redis('raw_data', response.body)
-    end
-
-    def store_in_redis(redis_key, redis_value)
-      Redis.current.set(redis_key, redis_value)
+      RedisSaver.call('raw_data', response.body)
     end
 
     def get_data_from_redis(redis_key)
