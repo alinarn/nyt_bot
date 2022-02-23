@@ -1,7 +1,7 @@
 :schedule:
   api_call:
-    every: '2h'
+    every: '8h'
     class: ApiWorker
   sending_notification:
-    every: '10s'
+    every: '12h'
     class: NotificationHandler
