@@ -19,15 +19,21 @@ class Bot
       bot.listen do |message|
         case message.text
         when '/start'
+          welcome_message = <<~MESSAGE
+            Hey, #{message.from.first_name}!
+            From now on, I'm gonna send you the latest movie reviews by Ben Kenigsberg.
+            If you want to view recent 10 reviews type /reviews
+          MESSAGE
           bot.api.send_message(
             chat_id: message.chat.id,
-            text: "hey, #{message.from.first_name}! welcome"
-            )
-        when '/data'
+            text: welcome_message
+          )
+        when '/reviews'
           bot.api.send_message(
             chat_id: message.chat.id,
-            text: "#{data.pretty_print.join}",
-            )
+            text: "#{data.pretty_print.take(10).join}",
+            parse_mode: 'HTML'
+          )
         end
         store_chat_id(message.chat.id)
       end
@@ -36,12 +42,16 @@ class Bot
 
   def self.send_notification(message)
     chat_id = Redis.current.get('chat_id')
-    BOT.api.send_message(chat_id: chat_id, text: message)
+    BOT.api.send_message(
+      chat_id: chat_id,
+      text: message,
+      parse_mode: 'HTML'
+    )
   end
 
   private
 
   def store_chat_id(chat_id)
-   RedisSaver.call('chat_id', chat_id)
+    RedisSaver.call('chat_id', chat_id)
   end
 end

@@ -10,7 +10,7 @@ class DataPresenter
   def pretty_print
     movie_reviews.map do |review|
       <<~MESSAGE
-        #{review[:title]} #{critics_pick?(review[:critics_pick])}
+        <b>#{review[:title]} #{critics_pick?(review[:critics_pick])}</b>
         #{review[:summary]}
         review published on: #{format_date(review[:publication_date])}
         view here: #{review[:link]}\n 
